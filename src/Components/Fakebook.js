@@ -1,24 +1,39 @@
 import React, {Component} from "react";
-import UserData from "./UserData";
+import UserPanel from "./UserPanel";
 import Feed from "./Feed";
-import Login from "./Login";
+import AuthForm from "./Auth/AuthForm";
 
 class Fakebook extends Component {
     constructor(props){
         super(props);
         this.state = {
-
+            currentUser: ""
         }
     }
 
-    componentDidMount(){
-
+    async componentDidMount(){
+        const URL = "http://localhost:3000";
         //fetch initial results
+        if (localStorage.getItem("token")){
+            let user;
+            try {
+                user = await fetch(URL+"/home", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                        } 
+                });
+                user = await (()=>user.ok ? user.json() : new Error("Problem retrieving data"))();
+                this.setState({currentUser: user});
+            } catch(e){ console.log(e); }
+        }
+    
     }
+
     render(){
         //if authenticated, show UserData/Feed, otherwise, show login/register screen
-        let authenticated;        
-        return (authenticated ? <div><UserData /><Feed /></div> : <Login />);
+        return (this.state.currentUser!=="" ? <div><UserPanel /><Feed /></div> : <AuthForm />);
     }
 }
 

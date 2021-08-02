@@ -1,7 +1,7 @@
 import React from "react";
 
-const UserData = (props)=>{
+const UserPanel = (props)=>{
     return (<div></div>);
 }
 
-export default UserData;
+export default UserPanel;
