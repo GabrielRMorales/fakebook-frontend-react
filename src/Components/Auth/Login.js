@@ -5,8 +5,9 @@ const Login = (props)=>{
     const [password, setPassword] = useState("");
 
     return (<form onSubmit={async ()=>{
+        let data;
         try {
-            await fetch("http://localhost:3000/login", {
+            data = await fetch("http://localhost:3000/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -16,8 +17,12 @@ const Login = (props)=>{
                     password
                 })
             });
+            data = data.json();
             //get returned data and add token to localStorage if it worked
-
+            if (data.token){
+                localStorage.setItem("token", data.token);
+            }
+            //pass user data
         } catch(e){
             throw new Error(e);
         }
